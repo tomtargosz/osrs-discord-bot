@@ -1,11 +1,10 @@
-import { ChatInputCommandInteraction, MessageComponentInteraction, PermissionsString } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionsString } from 'discord.js';
 import { RateLimiter } from 'discord.js-rate-limiter';
 import fetch from 'node-fetch';
 
 import { InteractionUtils } from '../../utils/index.js';
-import { Command, CommandDeferType } from '../index.js';
 import { TableBuilder } from '../../utils/table-builder.js';
-import { log } from 'console';
+import { Command, CommandDeferType } from '../index.js';
 
 const starMaxMineTime: Record<string, number> = {
     9: 90,
@@ -52,11 +51,9 @@ export class StarCommand implements Command {
                 const formattedStars: Array<StarWithRemainingTime> = data.map(x => {
                     return{ ...x, timeRemaining: getEstimatedTimeRemaining(x) }
                 })
-                log(formattedStars)
                 const stars = formattedStars.filter(x => (starMaxMineTime[x.tier.toString()] - 45)  > x.time)
 
-                console.log('stars size: ', data.length)
-                console.log('filtered size: ', stars.length)
+                
 
                        const table = new TableBuilder<StarWithRemainingTime>(
                         [
@@ -83,9 +80,6 @@ export class StarCommand implements Command {
 
                 stars.sort((a, b) => getEstimatedTimeRemaining(b) - getEstimatedTimeRemaining(a)).slice(0, 8).forEach(star => table.addRows(star))
          
-            console.log('lengt: ', table.build().length)
-
-
             await InteractionUtils.send(intr, table.build());
             })
         
