@@ -9,14 +9,14 @@ import { Command, CommandDeferType } from '../index.js';
 const starMaxMineTime: Record<string, number> = {
     9: 90,
     8: 87,
-7: 80,
-6: 75,
-5: 66,
-4: 57,
-3: 49,
-2: 36,
-1: 18
-}
+    7: 80,
+    6: 75,
+    5: 66,
+    4: 57,
+    3: 49,
+    2: 36,
+    1: 18,
+};
 
 type Star = {
     region: string;
@@ -25,15 +25,15 @@ type Star = {
     tier: number;
     loc: string;
     scout: string;
-}
+};
 
 type StarWithRemainingTime = Star & {
-    timeRemaining: number
-}
+    timeRemaining: number;
+};
 
 const getEstimatedTimeRemaining: (star: Star) => number = (star: Star) => {
     return starMaxMineTime[star.tier.toString()] - star.time;
-}
+};
 
 export class StarCommand implements Command {
     public names = ['star'];
@@ -43,48 +43,48 @@ export class StarCommand implements Command {
 
     public async execute(intr: ChatInputCommandInteraction): Promise<void> {
         const starData = await fetch('https://osrsportal.com/activestars', {
-  'method': 'GET'
-});
+            method: 'GET',
+        });
 
         if (starData.ok) {
             starData.json().then(async (data: Array<Star>) => {
                 const formattedStars: Array<StarWithRemainingTime> = data.map(x => {
-                    return{ ...x, timeRemaining: getEstimatedTimeRemaining(x) }
-                })
-                const stars = formattedStars.filter(x => (starMaxMineTime[x.tier.toString()] - 45)  > x.time)
+                    return { ...x, timeRemaining: getEstimatedTimeRemaining(x) };
+                });
+                const stars = formattedStars.filter(
+                    x => starMaxMineTime[x.tier.toString()] - 45 > x.time
+                );
 
-                
+                const table = new TableBuilder<StarWithRemainingTime>([
+                    {
+                        width: 40,
+                        label: 'Location',
+                        index: 1,
+                        field: 'loc',
+                    },
+                    {
+                        width: 10,
+                        label: 'World',
+                        index: 2,
+                        field: 'world',
+                    },
+                    {
+                        width: 25,
+                        label: 'Est. Time Remaining',
+                        index: 3,
+                        field: 'timeRemaining',
+                    },
+                ]);
 
-                       const table = new TableBuilder<StarWithRemainingTime>(
-                        [
-      {
-        width: 40,
-        label: 'Location',
-        index: 1,
-        field: 'loc',
-      },
-      {
-        width: 10,
-        label: 'World',
-        index: 2,
-        field: 'world',
-      },
-      {
-        width: 25,
-        label: 'Est. Time Remaining',
-        index: 3,
-        field: 'timeRemaining',
-      }
-    ]
-        )
+                stars
+                    .sort((a, b) => getEstimatedTimeRemaining(b) - getEstimatedTimeRemaining(a))
+                    .slice(0, 8)
+                    .forEach(star => table.addRows(star));
 
-                stars.sort((a, b) => getEstimatedTimeRemaining(b) - getEstimatedTimeRemaining(a)).slice(0, 8).forEach(star => table.addRows(star))
-         
-            await InteractionUtils.send(intr, table.build());
-            })
-        
+                await InteractionUtils.send(intr, table.build());
+            });
         } else {
-        await InteractionUtils.send(intr, 'error');
+            await InteractionUtils.send(intr, 'error');
         }
     }
 }
