@@ -61,8 +61,6 @@ export class StarCommand implements Command {
             method: 'GET',
         });
 
-        console.log(intr);
-
         if (starData.ok) {
             starData.json().then(async (data: Array<Star>) => {
                 const formattedStars: Array<StarWithRemainingTime> = data.map(x => {
@@ -93,17 +91,21 @@ export class StarCommand implements Command {
                     },
                 ]);
 
-                stars
-                    .sort((a, b) => getEstimatedTimeRemaining(b) - getEstimatedTimeRemaining(a))
-                    .slice(0, 8)
-                    .forEach(star => table.addRows(star));
+                if (stars.length === 0) {
+                    await InteractionUtils.send(intr, 'No stars currently available. :(');
+                } else {
+                    stars
+                        .sort((a, b) => getEstimatedTimeRemaining(b) - getEstimatedTimeRemaining(a))
+                        .slice(0, 8)
+                        .forEach(star => table.addRows(star));
 
-                const message =
-                    intr.user.username === 'uaremyfriend'
-                        ? `Wow, my best buddy Dan! ${getGreeting()}\n${table.build()}`
-                        : table.build();
+                    const message =
+                        intr.user.username === 'uaremyfriend'
+                            ? `Wow, my best buddy Dan! ${getGreeting()}\n${table.build()}`
+                            : table.build();
 
-                await InteractionUtils.send(intr, message);
+                    await InteractionUtils.send(intr, message);
+                }
             });
         } else {
             starData
