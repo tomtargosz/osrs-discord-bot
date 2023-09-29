@@ -84,7 +84,14 @@ export class StarCommand implements Command {
                 await InteractionUtils.send(intr, table.build());
             });
         } else {
-            await InteractionUtils.send(intr, 'error');
+            starData
+                .json()
+                .then(async message => {
+                    await InteractionUtils.send(intr, `Error: ${JSON.stringify(message)}`);
+                })
+                .catch(async message => {
+                    await InteractionUtils.send(intr, `Error: ${message}`);
+                });
         }
     }
 }
