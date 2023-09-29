@@ -35,6 +35,21 @@ const getEstimatedTimeRemaining: (star: Star) => number = (star: Star) => {
     return starMaxMineTime[star.tier.toString()] - star.time;
 };
 
+const getGreeting: () => string = () => {
+    const timelagging = 6;
+    const utc = new Date();
+    const hours = new Date(utc.getTime() - 1 * 60 * 60 * 1000 * timelagging).getHours();
+    if (hours >= 6 && hours < 12) {
+        return 'Good morning! I hope you have a great day ahead of you. Let me show you the current stars are:';
+    } else if (hours < 5) {
+        return 'Good afternoon! Make sure to eat a nutritious lunch to sustain you for the rest of your day- might I suggest some black bean soup?';
+    } else if (hours < 12) {
+        return `Good evening! Shouldn't you be focusing on your league game with the boys instead of mining stars?`;
+    } else {
+        return 'Staying up late are we? Blue light can disrupt your sleep- make sure to put on those gunners!';
+    }
+};
+
 export class StarCommand implements Command {
     public names = ['star'];
     public cooldown = new RateLimiter(1, 5000);
@@ -45,6 +60,8 @@ export class StarCommand implements Command {
         const starData = await fetch('https://osrsportal.com/activestars', {
             method: 'GET',
         });
+
+        console.log(intr);
 
         if (starData.ok) {
             starData.json().then(async (data: Array<Star>) => {
@@ -81,7 +98,12 @@ export class StarCommand implements Command {
                     .slice(0, 8)
                     .forEach(star => table.addRows(star));
 
-                await InteractionUtils.send(intr, table.build());
+                const message =
+                    intr.user.username === 'uaremyfriend'
+                        ? `Wow, my best buddy Dan! ${getGreeting()}\n${table.build()}`
+                        : table.build();
+
+                await InteractionUtils.send(intr, message);
             });
         } else {
             starData
