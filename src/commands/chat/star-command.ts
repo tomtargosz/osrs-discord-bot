@@ -61,6 +61,9 @@ export class StarCommand implements Command {
 
     public async execute(intr: ChatInputCommandInteraction): Promise<void> {
         const starData = await fetch('https://osrsportal.com/activestars', {
+            headers: {
+                Referer: 'https://osrsportal.com/shooting-stars-tracker',
+            },
             method: 'GET',
         });
 
