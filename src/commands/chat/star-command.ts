@@ -7,15 +7,15 @@ import { TableBuilder } from '../../utils/table-builder.js';
 import { Command, CommandDeferType } from '../index.js';
 
 const starMaxMineTime: Record<string, number> = {
-    9: 90,
-    8: 87,
-    7: 80,
-    6: 75,
-    5: 66,
-    4: 57,
-    3: 49,
-    2: 36,
-    1: 18,
+    9: 63,
+    8: 56,
+    7: 49,
+    6: 42,
+    5: 35,
+    4: 28,
+    3: 21,
+    2: 14,
+    1: 7,
 };
 
 type Star = {
@@ -32,7 +32,7 @@ type StarWithRemainingTime = Star & {
 };
 
 const getEstimatedTimeRemaining: (star: Star) => number = (star: Star) => {
-    return starMaxMineTime[star.tier.toString()] - star.time;
+    return star.tier * 7;
 };
 
 const getGreeting: () => string = () => {
