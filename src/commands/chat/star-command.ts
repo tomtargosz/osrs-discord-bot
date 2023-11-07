@@ -60,11 +60,24 @@ export class StarCommand implements Command {
     public requireClientPerms: PermissionsString[] = [];
 
     public async execute(intr: ChatInputCommandInteraction): Promise<void> {
+        const tokenOne = btoa(
+            JSON.stringify({
+                alg: 'none',
+                typ: 'JWT',
+            })
+        );
+        const tokenTwo = btoa(
+            JSON.stringify({
+                data: 'osrs_stars',
+                exp: Math.floor(Date.now() / 1e3) + 300,
+            })
+        );
         const starData = await fetch('https://osrsportal.com/activestars-foxtrot', {
             headers: {
                 Referer: 'https://osrsportal.com/shooting-stars-tracker',
                 authorization:
                     'Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0=.eyJkYXRhIjoib3Nyc19zdGFycyIsImV4cCI6MTY5OTExMzIzM30=.',
+                    `Bearer ${tokenOne}.${tokenTwo}.`,
             },
             method: 'GET',
         });
