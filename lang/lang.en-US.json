@@ -196,7 +196,8 @@
             "help": "help",
             "info": "info",
             "test": "test",
-            "star": "star"
+            "star": "star",
+            "league": "league"
         },
         "userCommands": {
             "viewDateJoined": "View Date Joined"
@@ -213,7 +214,8 @@
             "help": "Find help or contact support.",
             "info": "View bot info.",
             "test": "Run the test command.",
-            "star": "Update the shooting star list."
+            "star": "Update the shooting star list.",
+            "league": "Randomize the league crew."
         },
         "argDescs": {
             "devCommand": "Command.",

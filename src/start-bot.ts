@@ -7,6 +7,7 @@ import {
     DevCommand,
     HelpCommand,
     InfoCommand,
+    LeagueCommand,
     StarCommand,
     TestCommand,
 } from './commands/chat/index.js';
@@ -67,6 +68,7 @@ async function start(): Promise<void> {
         new InfoCommand(),
         new TestCommand(),
         new StarCommand(),
+        new LeagueCommand(),
 
         // Message Context Commands
         new ViewDateSent(),

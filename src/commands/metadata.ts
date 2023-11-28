@@ -77,7 +77,16 @@ export const ChatCommandMetadata: {
         description_localizations: Lang.getRefLocalizationMap('commandDescs.star'),
         dm_permission: true,
         default_member_permissions: undefined,
-    }
+    },
+    LEAGUE: {
+        type: ApplicationCommandType.ChatInput,
+        name: Lang.getRef('chatCommands.league', Language.Default),
+        name_localizations: Lang.getRefLocalizationMap('chatCommands.league'),
+        description: Lang.getRef('commandDescs.league', Language.Default),
+        description_localizations: Lang.getRefLocalizationMap('commandDescs.league'),
+        dm_permission: true,
+        default_member_permissions: undefined,
+    },
 };
 
 export const MessageCommandMetadata: {
